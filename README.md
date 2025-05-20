@@ -1,43 +1,51 @@
 # Web Crawler and Search Engine  
 **Author**: Arun Kumar  
-**Email**: arunganesh7070@gmail.com  
-**GitHub**: [arunganesh7070](https://github.com/arunganesh7070)  
+**College**: PSG College of Technology  
+**GitHub**: [arunganesh7070@gmail.com](mailto:arunganesh7070@gmail.com)
 
-A Python-based web crawler and search engine built as a college project to explore practical applications of **Data Structures and Algorithms (DSA)**.
+## About  
+This project is a custom web crawler and search engine that I developed in Python 3 during my time at PSG College of Technology. My goal was to gain hands-on experience in data structures, algorithms, and information retrieval systems.
 
----
+The crawler is designed to navigate and process content from academic websites and extract meaningful information. The search engine component enables querying through the crawled data using cosine similarity and supports document clustering and synonym expansion via a thesaurus.
 
-## 📌 Overview
+## Key Features
 
-This project was developed by **Arun Kumar** during his time at **Southern Methodist University** to gain hands-on experience with DSA concepts through real-world implementation.
+- **Web Crawling**: The crawler navigates through web pages starting from a seed URL, extracts content, and respects `robots.txt` policies to ensure ethical scraping.
+- **Indexing**: Each visited page is processed and added to an in-memory index. Pages are hashed to detect duplicates, and a term frequency matrix is constructed.
+- **Stemming**: All extracted words are stemmed using the NLTK Porter Stemmer to normalize content.
+- **Document Clustering**: Pages are grouped using a simple leader-based clustering algorithm based on Euclidean distance.
+- **Search Engine**: 
+  - Queries are matched against the indexed content using LTC.LTC weighted cosine similarity.
+  - Stopwords are filtered out using a configurable stopword list.
+  - If few results are returned, synonym expansion is performed using a thesaurus to improve recall.
+  - Documents with query terms in the title get a slight score boost.
+- **Query Output**: Top results are displayed with relevance scores, titles, and snippet previews.
 
-Key features include:
-- A polite, custom-built web crawler
-- Real-time crawling and logging
-- Document indexing with stemming and stopword removal
-- Query processing with a basic search engine
-- Document clustering and cosine similarity scoring
-- Support for thesaurus-based query expansion
+## How It Works
 
----
+### Crawler
+The crawler begins at a specified seed URL and builds a queue (`url_frontier`) of unvisited links. It visits pages one by one, collecting:
+- Page titles
+- Valid words (filtered by regex and stemmed)
+- Outgoing, broken, and image links
+- Duplicate content based on content hashing
 
-## 🧰 Libraries & Tools
+Each page is assigned a unique document ID and stored along with its metadata. The crawler generates a complete term frequency matrix and exports results such as:
+- Top 20 stemmed words with document frequencies
+- Document clusters
+- Term frequency matrix as CSV
+- Optionally, an index file for later re-use
 
-- **Python 3.6**
-- **BeautifulSoup4** – HTML parsing  
-- **NLTK (Porter Stemmer)** – Word stemming  
-- **SciKit-Learn** – Euclidean distance for clustering  
-- **Pickle** – Index import/export  
+### Search Engine
+The search engine builds upon the crawler and adds:
+- Import/export functionality for indices
+- Query processing and result ranking
+- Document clustering for faster search
+- Query expansion using a user-provided thesaurus
 
----
-
-## ⚙️ Installation & Setup
-
-### Step 1 – Install Python 3.6
-
-Ensure Python 3.6 is installed on your system.
-
-### Step 2 – Install setuptools
-
-```bash
-sudo apt-get install python3-setuptools
+When a user submits a query:
+- Stopwords are removed
+- Remaining words are stemmed and matched to the index
+- Cosine similarity is calculated using the LTC.LTC weighting scheme
+- If results are few, synonyms are used to reformulate the query
+- Top results (with scores > 0) are shown, sorted by relevance
